@@ -46,6 +46,7 @@ def start_timer(duration, timer_label):
 
 # Monitoring function
 def monitor_file(profile, timer_label):
+    timer_label.config(text="It's Getting Hot in Here...")  # Update GUI label
     while True:
         newest_csv = get_newest_csv(MONITOR_FOLDER)
         if newest_csv:
@@ -70,6 +71,7 @@ def monitor_file(profile, timer_label):
             finally:
                 os.remove(temp_csv)
         time.sleep(10)
+
 
 # GUI Setup
 def create_gui():
