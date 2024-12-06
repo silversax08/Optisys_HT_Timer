@@ -1,0 +1,3 @@
+cd "D:\Optisys\Engineering - Documents\Operations\09 Temp\G Hawkins Temp\HT_Timer\Scripts"
+
+pyinstaller --onefile --noconsole --add-data "alarm_sound.mp3;." HT_Timer.py
