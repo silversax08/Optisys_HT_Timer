@@ -13,9 +13,9 @@ SOUND_FILE = r"C:\Users\GarrettHawkins\Downloads\alarm_sound.mp3"
 
 # Profiles
 PROFILES = {
-    "A": {"threshold": 280, "timer_minutes": .25},
-    "M": {"threshold": 300, "timer_minutes": 240},
-    "O": {"threshold": 320, "timer_minutes": 300},
+    "A": {"threshold": 280, "timer_minutes": .1, "columns": ["B"]},
+    "M": {"threshold": 280, "timer_minutes": .1, "columns": ["B"]},
+    "O": {"threshold": 280, "timer_minutes": .1, "columns": ["B", "C"]},
 }
 
 # Folder to monitor
@@ -26,6 +26,7 @@ def get_newest_csv(folder):
     csv_files = [os.path.join(folder, f) for f in os.listdir(folder) if f.endswith('.csv')]
     return max(csv_files, key=os.path.getmtime) if csv_files else None
 
+# Function to play sound
 def play_sound(file_path):
     pygame.mixer.init()
     pygame.mixer.music.load(file_path)
@@ -38,11 +39,10 @@ def start_timer(duration, timer_label):
     end_time = datetime.now() + timedelta(seconds=duration)
     while datetime.now() < end_time:
         remaining_time = end_time - datetime.now()
-        timer_label.config(text=f"Time Remaining: {remaining_time}")
+        timer_label.config(text=f"Time Remaining: {str(remaining_time).split('.')[0]}")
         time.sleep(1)
     timer_label.config(text="Time's Up!")
     play_sound(SOUND_FILE)
-
 
 # Monitoring function
 def monitor_file(profile, timer_label):
@@ -53,15 +53,23 @@ def monitor_file(profile, timer_label):
             shutil.copy(newest_csv, temp_csv)
             try:
                 data = pd.read_csv(temp_csv)
-                last_row = data.iloc[-1]  # Get the last row of the dataframe
-                col_b, col_c = last_row.iloc[1], last_row.iloc[2]  # Adjust index if necessary
-                if col_b > profile["threshold"] and col_c > profile["threshold"]:
-                    timer_duration = profile["timer_minutes"] * 60
-                    threading.Thread(target=start_timer, args=(timer_duration, timer_label)).start()
-                    break
+                last_row = data.iloc[-1]
+                threshold = profile["threshold"]
+                columns = profile["columns"]
+
+                if "B" in columns and last_row.iloc[1] > threshold:
+                    if "C" in columns:
+                        if last_row.iloc[2] > threshold:
+                            timer_duration = profile["timer_minutes"] * 60
+                            threading.Thread(target=start_timer, args=(timer_duration, timer_label)).start()
+                            break
+                    else:
+                        timer_duration = profile["timer_minutes"] * 60
+                        threading.Thread(target=start_timer, args=(timer_duration, timer_label)).start()
+                        break
             finally:
                 os.remove(temp_csv)
-        time.sleep(60)
+        time.sleep(10)
 
 # GUI Setup
 def create_gui():
