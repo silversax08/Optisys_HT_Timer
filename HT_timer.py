@@ -13,9 +13,9 @@ SOUND_FILE = r"C:\Users\GarrettHawkins\Downloads\alarm_sound.mp3"
 
 # Profiles
 PROFILES = {
-    "A": {"threshold": 280, "timer_minutes": .1, "columns": ["B"]},
-    "M": {"threshold": 280, "timer_minutes": .1, "columns": ["B"]},
-    "O": {"threshold": 280, "timer_minutes": .1, "columns": ["B", "C"]},
+    "A": {"threshold": 230, "timer_minutes": 360, "columns": ["B"]},
+    "M": {"threshold": 275, "timer_minutes": 120, "columns": ["B"]},
+    "O": {"threshold": 275, "timer_minutes": 120, "columns": ["B", "C"]},
 }
 
 # Folder to monitor
