@@ -1,3 +1,4 @@
+import sys
 import os
 import shutil
 import pandas as pd
@@ -8,18 +9,26 @@ import threading
 import time
 import pygame
 
+# Locate the .mp3 file relative to the executable
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):  # PyInstaller temp folder
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
 # Hardcoded sound file path
-SOUND_FILE = r"C:\Users\GarrettHawkins\Downloads\alarm_sound.mp3"
+SOUND_FILE = resource_path("alarm_sound.mp3")
 
 # Profiles
 PROFILES = {
-    "A": {"threshold": 230, "timer_minutes": 360, "columns": ["B"]},
-    "M": {"threshold": 275, "timer_minutes": 120, "columns": ["B"]},
-    "O": {"threshold": 275, "timer_minutes": 120, "columns": ["B", "C"]},
+    "A": {"threshold": 446, "timer_minutes": 360, "columns": ["B"]},
+    "M": {"threshold": 527, "timer_minutes": 120, "columns": ["B"]},
+    "O": {"threshold": 527, "timer_minutes": 120, "columns": ["B", "C"]},
 }
 
 # Folder to monitor
-MONITOR_FOLDER = r"C:\Users\GarrettHawkins\Downloads"
+MONITOR_FOLDER = r"C:\Heat Treat"
+# MONITOR_FOLDER = r"C:\Users\GarrettHawkins\Downloads"
+
 
 # Function to get the newest CSV file
 def get_newest_csv(folder):
@@ -70,7 +79,7 @@ def monitor_file(profile, timer_label):
                         break
             finally:
                 os.remove(temp_csv)
-        time.sleep(10)
+        time.sleep(30)
 
 
 # GUI Setup
